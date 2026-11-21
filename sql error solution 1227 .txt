@@ -1,0 +1,15 @@
+CREATE OR REPLACE VIEW `v_company_due` AS
+SELECT
+    co.company_id,
+    co.company_name,
+    co.phone_1,
+    COALESCE(SUM(p.total_amount - p.discount_amount), 0) AS total_purchased,
+    COALESCE(SUM(p.paid_amount), 0) AS total_paid,
+    COALESCE(SUM(p.due_amount), 0) AS total_due
+FROM companies co
+LEFT JOIN purchases p
+    ON p.company_id = co.company_id
+GROUP BY
+    co.company_id,
+    co.company_name,
+    co.phone_1;
